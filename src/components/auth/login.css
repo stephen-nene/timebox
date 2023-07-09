@@ -1,15 +1,19 @@
  
-  p a {
-    cursor: pointer;
+  .login-toggle a {
+    cursor: pointer; 
+     margin-left: 10px;
+
   }
 
-  p a {
+  .login-toggle a,
+  a {
     cursor: pointer;
     color: rgb(0, 89, 255);
   }
   
-  p a:hover {
-    color: rgb(0, 183, 255); /* Set the color on hover */
+  .login-toggle a:hover,
+  a:hover {
+    color: rgb(0, 183, 255); 
   }
   .w-100 {
     width: 95% !important;
