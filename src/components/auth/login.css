@@ -1,0 +1,16 @@
+ 
+  p a {
+    cursor: pointer;
+  }
+
+  p a {
+    cursor: pointer;
+    color: rgb(0, 89, 255);
+  }
+  
+  p a:hover {
+    color: rgb(0, 183, 255); /* Set the color on hover */
+  }
+  .w-100 {
+    width: 95% !important;
+}
