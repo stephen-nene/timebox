@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :timeframes
+  resources :tasks
+  resources :brain_dumps
+  resources :top_priorities
   resources :users
 
   get    '/me',   to: 'sessions#find'

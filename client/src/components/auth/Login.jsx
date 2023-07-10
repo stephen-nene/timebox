@@ -29,17 +29,23 @@ function App() {
   
   
 
-  const handleSignup = async() => {
-    try{
+  const handleSignup = async () => {
+    try {
       const response = await axios.post("/api/users", formData);
       console.log(response.data);
-      // dispatch(login());
       message.success(response.data.message);
-    } catch (e){
-      console.error(e);
+    } catch (error) {
+      console.error(error.response.data);
+      const errors = error.response.data;
+      if (errors.email) {
+        message.error(errors.email[0]);
+      }
+      if (errors.password) {
+        message.error("password" + errors.password[0]);
+      }
     }
   };
-
+  
   const forgotPassword = () => {
     message.info('Forgot password not added');
   };

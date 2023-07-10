@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
-    render json: @user
+    render json: @user, serializer: UserSerializer, include_associations: true
   end
 
   # POST /users
@@ -18,13 +18,11 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
-      session[:user_id] = @user.id
-      render json: { message: 'Account created successfully', user: @user }, status: :created
+      render json: @user, status: :created, location: @user
     else
       render json: @user.errors, status: :unprocessable_entity
     end
   end
-
 
   # PATCH/PUT /users/1
   def update
@@ -48,6 +46,6 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.permit(:username, :email, :password)
+      params.require(:user).permit(:username, :email, :password_digest)
     end
 end
