@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Kablammo&display=swap');
+
+.priorities {
+  /* font-family: Kablammo; */
+  background-color: #1a2457;
+  padding: 20px;
+  color: white;
+  border: 3px solid #412e2e;   
+}
+
+.top3 input[type="text"] {
+  width: 70%;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background-color: #3D5AF1;
+  color: #E2F3F5;
+  margin-bottom: 10px;
+}
+
+.edit-mode  input[type="text"] {
+  background-color: #B063C5;
+  color: white;
+}
+
+.btns .savebtn {
+  background-color: #3D5AF1;
+  border: none;
+  border-radius: 10px;
+  color: #E2F3F5;
+  padding: 5px 10px;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: background-color 0.7s;
+}
+
+.btns .savebtn-active {
+  background-color: #B063C5;
+}

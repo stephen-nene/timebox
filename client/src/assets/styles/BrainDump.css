@@ -1,0 +1,65 @@
+.dumps {
+    background-color: #1a2457;
+    border: 3px solid #412e2e;   
+    color: white;
+    padding: 20px;
+}
+
+h2.name{
+    font-family: 'Kablammo', sans-serif;
+
+}
+
+.ideas  {
+    list-style-type:georgian;
+    padding-left: 20%;
+    padding-right: 20%;
+    margin: 0;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.task p {
+    margin: 0;
+}
+
+.delicon svg {
+    cursor: pointer;
+    color: #F24C3D;
+    font-size: 30px;
+}
+
+.delicon svg:hover {
+    border-radius: 50%;
+    background-color: #F24C3D;
+}
+
+.addtask {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.addtask input[type="text"] {
+    width: 65%;
+    padding: 10px;
+    border: none;
+    background-color: #3D5AF1;
+    color: #E2F3F5;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+
+.addtask svg{
+    font-size: 40px;
+}
+
+.brainsave{
+    margin-top: 20px;
+}

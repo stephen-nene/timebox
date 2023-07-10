@@ -3,6 +3,11 @@ import './App.css';
 import Login from '../components/auth/Login';
 import Home from '../components/Home';
 import { login } from '../store/actions/actions';
+import Logo from '../components/Logo'
+import BrainDump from '../components/BrainDump'
+import Time from '../components/Time'
+import TopPriorities from '../components/TopPriorities'
+
 import { Route, Routes } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';

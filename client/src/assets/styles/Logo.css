@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Kablammo&display=swap');
+
+.nav-logo {
+  position: sticky;
+  top: 0;
+  background-color: #0E153A;
+  padding: 10px;
+  color: white;
+}
+
+.logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h3 {
+  font-family: 'Kablammo', cursive;
+  color: #22D1EE;
+  padding-right:4px;
+  cursor: pointer;
+}
+
+.date-navigation {
+  display: flex;
+  align-items: center;
+}
+
+p {
+  margin-right: 10px;
+  color: #B063C5;
+  font-weight: bold;
+}
+
+button {
+  background-color: #3D5AF1;
+  border: none;
+  border-radius: 10px;
+  color: #E2F3F5;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: background-color 0.7s;
+}
+
+button:hover {
+  background-color: #B063C5;
+}
