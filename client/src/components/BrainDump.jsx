@@ -29,7 +29,7 @@ export default function BrainDump() {
   return (
     <>
       <div className="dumps">
-        <h2 className="name">Brain Dump</h2>
+        <h2 className="name mb-4">Brain Dump</h2>
         {tasks.length > 0 ? (
           <div className="ideas">
             <ol>
@@ -47,7 +47,7 @@ export default function BrainDump() {
           <p>No tasks available.</p>
         )}
 
-        <form onSubmit={handleAddDump} className="addtask">
+        <form onSubmit={handleAddDump} className="mb-5 addtask">
           <input
             type="text"
             placeholder="Write an idea for the day..."

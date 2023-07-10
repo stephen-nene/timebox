@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   
-  def show
+  def find
     @user = User.find_by(id: session[:user_id])
 
     if @user.present?

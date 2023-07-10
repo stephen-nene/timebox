@@ -18,7 +18,7 @@ function App() {
         email: formData.email,
         password: formData.password
       });
-      console.log(response.data);
+      console.log(response.data.user);
           dispatch(login(response.data));
       // Process the response data here
     } catch (error) {

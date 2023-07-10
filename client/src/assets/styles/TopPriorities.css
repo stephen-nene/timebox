@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kablammo&display=swap');
 
 .priorities {
-  /* font-family: Kablammo; */
   background-color: #1a2457;
   padding: 20px;
   color: white;
@@ -11,6 +10,7 @@
 .top3 input[type="text"] {
   width: 70%;
   padding: 10px;
+  margin-bottom: 20px;
   border: none;
   border-radius: 20px;
   background-color: #3D5AF1;

@@ -1,5 +1,4 @@
 import React from "react";
-import "../assets/styles/home.css";
 import { MDBBtn } from "mdb-react-ui-kit";
 import { message } from "antd";
 import axios from 'axios';
