@@ -1,0 +1,36 @@
+ .login-bg {
+  background: #6a11cb;
+    height: 100vh;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to top, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+}
+
+.white-input {
+  color: white;
+}
+
+.form-outline .form-control~.form-label {
+  color: #fff;
+}
+
+.login-card .loginToggle p a {
+  margin-left: 10px;
+}
+
+.login-card p a {
+  cursor: pointer;
+  color: rgb(0, 89, 255);
+}
+
+.login-card p a:hover {
+  color: rgb(0, 183, 255);
+}
+
+.login-card .w-100 {
+  width: 95% !important;
+}
