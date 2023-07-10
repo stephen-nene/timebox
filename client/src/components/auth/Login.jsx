@@ -16,11 +16,12 @@ function App() {
     try {
       console.log(formData.email); // Log the email before sending the request
   
-      const response = await axios.post('http://127.0.0.1:3000/login', {
+      const response = await axios.post('/api/login', {
         email: formData.email,
         password: formData.password
       });
       console.log(response.data);
+          dispatch(login());
       // Process the response data here
     } catch (error) {
       console.error(error);
