@@ -14,14 +14,12 @@ function App() {
 
   const handleLogin = async () => {
     try {
-      console.log(formData.email); // Log the email before sending the request
-  
       const response = await axios.post('/api/login', {
         email: formData.email,
         password: formData.password
       });
       console.log(response.data);
-          dispatch(login());
+          dispatch(login(response.data));
       // Process the response data here
     } catch (error) {
       console.error(error);

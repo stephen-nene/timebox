@@ -28,16 +28,16 @@ export default function Home() {
     <div className="home">
       <h2 className="text-bold">Home</h2>
       <p>Welcome to my Home Page</p>
-      {userData && (
-      <div>
-        <p className="user-info">
-          <span className="info-label">User:</span> {userData.userData.username}
-        </p>
-        <p className="user-info">
-          <span className="info-label">Email:</span> {userData.userData.email}
-        </p>
-      </div>
-    )}
+      {userData?.userData && (
+        <div>
+          <p className="user-info">
+            <span className="info-label">User:</span> {userData.userData.username}
+          </p>
+          <p className="user-info">
+            <span className="info-label">Email:</span> {userData.userData.email}
+          </p>
+        </div>
+      )}
       <MDBBtn onClick={handleLogout} color="danger">Log out</MDBBtn>
     </div>
   );
