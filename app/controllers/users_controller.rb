@@ -19,11 +19,12 @@ class UsersController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
-      render json: @user, status: :created, location: @user
+      render json: { message: 'Account created successfully', user: @user }, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
   end
+
 
   # PATCH/PUT /users/1
   def update

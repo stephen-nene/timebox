@@ -25,15 +25,19 @@ function App() {
       console.error(error);
       // Handle any errors here
     }
-  };
-  
+  };  
   
   
 
-  const handleSignup = () => {
-    console.log( formData);
-    // dispatch(login());
-    message.info('signup coming soon');
+  const handleSignup = async() => {
+    try{
+      const response = await axios.post("/api/users", formData);
+      console.log(response.data);
+      // dispatch(login());
+      message.success(response.data.message);
+    } catch (e){
+      console.error(e);
+    }
   };
 
   const forgotPassword = () => {
