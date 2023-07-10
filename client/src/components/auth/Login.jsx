@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../../assets/styles/login.css';
 import { MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBInput, MDBIcon } from 'mdb-react-ui-kit';
 import { message } from 'antd';
+import axios from 'axios'
 
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/actions/actions';
@@ -11,11 +12,24 @@ function App() {
   const [loginToggle, setLoginToggle] = useState(true);
   const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
 
-  const handleLogin = () => {
-    console.log( formData);
- 
-    message.info('login coming soon');
+  const handleLogin = async () => {
+    try {
+      console.log(formData.email); // Log the email before sending the request
+  
+      const response = await axios.post('http://127.0.0.1:3000/login', {
+        email: formData.email,
+        password: formData.password
+      });
+      console.log(response.data);
+      // Process the response data here
+    } catch (error) {
+      console.error(error);
+      // Handle any errors here
+    }
   };
+  
+  
+  
 
   const handleSignup = () => {
     console.log( formData);
