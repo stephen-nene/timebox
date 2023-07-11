@@ -23,8 +23,9 @@ function App() {
           dispatch(login(response.data));
       // Process the response data here
     } catch (error) {
-      console.error(error);
-      message.error("error at server")
+     let  error1 =  error.response.data.error
+      // console.error(error.response.data.error);
+      message.error(error1)
       // Handle any errors here
     }
   };  
