@@ -13,6 +13,7 @@ function App() {
   const [formData, setFormData] = useState({ username: '', email: '', password: '', confirmPassword: '' });
 
   const handleLogin = async () => {
+    console.log("loggin")
     try {
       const response = await axios.post('/api/login', {
         email: formData.email,
@@ -23,6 +24,7 @@ function App() {
       // Process the response data here
     } catch (error) {
       console.error(error);
+      message.error("error at server")
       // Handle any errors here
     }
   };  
