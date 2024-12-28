@@ -1,16 +1,15 @@
-// Rootreducer.jsx
+// rootReducer.js
 
 import { combineReducers } from 'redux';
-import dateReducer from './dateReducer';
-import frameReducer from './frameReducer';
-import brainDumpReducer from './brainDumpReducer';
+import appReducer from './appReducer';
 import userReducer from './userReducer';
 
+
 const rootReducer = combineReducers({
-  currentDate: dateReducer,
-  timeFrames: frameReducer,
-  brainDump: brainDumpReducer,
-  user: userReducer
+  app: appReducer,
+  user: userReducer,
+  
+  // more reducers here
 });
 
 export default rootReducer;
