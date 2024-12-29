@@ -7,10 +7,10 @@
   border-color: #2563eb !important;    /* Hover border */
 }
 
-.dark.ant-picker-focused {
-  border-color: #3b82f6 !important;    /* Focus border */
-  background-color: #000 !important;  /* Focus background */
-}
+/* .dark.ant-picker-focused {
+  border-color: #3b82f6 !important;   
+  background-color: #000 !important;  
+} */
 .ant-picker-dropdown {
   background-color: #1f2937 !important;
   border-color: #4b5563 !important;
