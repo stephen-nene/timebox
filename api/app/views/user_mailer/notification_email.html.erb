@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>New Contact Form Submission</title>
+  </head>
+  <body>
+    <h1>New message received!</h1>
+    <p>You have a new message from <%= @user_name %>.</p>
+    <p>Email: <%= @user_email %></p>
+    <p>Subject: <%= @subject %></p>
+    <p>Message:</p>
+    <p><%= @message %></p>
+    <p>Please reply to the user at their email: <%= @user_email %></p>
+  </body>
+</html>

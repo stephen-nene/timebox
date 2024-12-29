@@ -38,7 +38,7 @@ function App() {
   return (
     <>
 
-      {isLoggedIn ? (
+      {!isLoggedIn ? (
         <div className="wrapper">
         <Logo />
         <div className="left">

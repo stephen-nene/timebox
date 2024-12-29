@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Set the port dynamically from Render's environment variable
+PORT=${PORT:-3000} # Default to 3000 if PORT is not set
+
+
+echo "Running bundle install"
+bundle install
+# Run database migration
+# echo "Running db:migrate..."
+# bundle exec rails db:migrate
+echo "Running migrations for cache, queue, and cable databases..."
+bundle exec rails db:migrate:cache
+bundle exec rails db:migrate:queue
+bundle exec rails db:migrate:cable
+# Run seed if needed
+# echo "Running db:seed..."
+# bundle exec rails db:seed
+
+# Start Rails server on the specified port
+# echo "Starting Rails server on port $PORT..."
+# bundle exec rails server -b '0.0.0.0' -p $PORT
