@@ -1,0 +1,74 @@
+import React from "react";
+import { DatePicker } from "antd";
+import { format, addDays, isToday } from "date-fns";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiCalendar,
+  FiRefreshCw,
+} from "react-icons/fi";
+import dayjs from "dayjs";
+
+export default function DateSelector({ selectedDate, setSelectedDate }) {
+  const handleDateChange = (date) => {
+    setSelectedDate(date?.toDate() || new Date());
+  };
+
+  const navigateDate = (direction) => {
+    setSelectedDate(addDays(selectedDate, direction));
+  };
+
+  const resetToToday = () => {
+    setSelectedDate(new Date());
+  };
+
+  return (
+    <div className="flex items-center justify-between p-4 bg-white dark:bg-sky-800 rounded-lg shadow-md transition-colors duration-200">
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => navigateDate(-1)}
+          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
+          aria-label="Previous day"
+        >
+          <FiChevronLeft className="w-5 h-5" />
+        </button>
+        <div className="relative">
+          <DatePicker
+            value={dayjs(selectedDate)}
+            onChange={handleDateChange}
+            format="DD/MM/YYYY"
+            allowClear={false}
+            popupClassName="custom-popup"
+            suffixIcon={
+              <FiCalendar className="text-blue-500 dark:text-blue-400" />
+            }
+            className="w-[150px] h-10 rounded-lg border-gray-200 dark:border-gray-700 dark:bg-gray-800 focus:bg-black !focus:bg-black !hover:border-blue-500 dark:text-white"
+            // popupClassName="dark:bg-gray-800 dark:border-gray-700"
+          />
+        </div>
+        <button
+          onClick={() => navigateDate(1)}
+          className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors"
+          aria-label="Next day"
+        >
+          <FiChevronRight className="w-5 h-5" />
+        </button>
+        {!isToday(selectedDate) && (
+          <button
+            onClick={resetToToday}
+            className="flex items-center gap-2 px-4 py-2 ml-2 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-all duration-200"
+          >
+            <FiRefreshCw className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
+      <div className="text-lg font-medium text-gray-800 dark:text-gray-200">
+        <div className="hidden md:block">
+          {format(selectedDate, "EEEE, MMMM do")}
+        </div>
+        <div className="md:hidden">{format(selectedDate, "EEE, MMM do")}</div>
+      </div>
+    </div>
+  );
+}

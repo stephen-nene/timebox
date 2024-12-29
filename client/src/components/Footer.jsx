@@ -11,17 +11,17 @@ export default function Footer() {
       title: "Quick Links",
       links: [
         { to: "/", label: "Home" },
-        { to: "/about", label: "About SpendIQue" },
+        { to: "/about", label: "About TimeBox" },
         { to: "/contact", label: "Contact Us" },
       ],
     },
     {
-      title: "Services",
+      title: "Features",
       links: [
-        { to: "/budgeting", label: "Budget Tracking" },
-        { to: "/expense-tracking", label: "Expense Management" },
-        { to: "/financial-planning", label: "Financial Planning" },
-        { to: "/investment-advice", label: "Investment Advice" },
+        { to: "/time-tracking", label: "Time Tracking" },
+        { to: "/task-management", label: "Task Management" },
+        { to: "/project-planning", label: "Project Planning" },
+        { to: "/reports", label: "Reports & Analytics" },
       ],
     },
     {
@@ -29,15 +29,15 @@ export default function Footer() {
       links: [
         { to: "/blogs", label: "Blogs" },
         { to: "/faq", label: "FAQs" },
-        { to: "/guides", label: "Financial Guides" },
+        { to: "/guides", label: "User Guides" },
       ],
     },
     {
-      title: "Contact Us",
+      title: "Support",
       links: [
-        { href: "tel:+254741780970", label: "+254 741 780 970" },
-        { href: "mailto:stevekid705@gmail.com", label: "support@spendiq.com" },
-        { to: "", label: "Customer Support" },
+        { href: "tel:+1234567890", label: "+1 234 567 890" },
+        { href: "mailto:support@timebox.com", label: "support@timebox.com" },
+        { to: "/customer-support", label: "Customer Support" },
       ],
     },
   ];
@@ -104,10 +104,10 @@ export default function Footer() {
               src="https://via.placeholder.com/150"
               alt="SpendIQue Logo"
             /> */}
-            <span className="font-semibold text-lg">SpendIQue</span>
+            <span className="font-semibold text-lg">TimeBox</span>
           </Link>
           <p className="mt-4 sm:mt-0 text-sm">
-            © {new Date().getFullYear()} SpendIQue. All Rights Reserved.
+            © {new Date().getFullYear()} Timebox. All Rights Reserved.
           </p>
         </div>
       </div>
