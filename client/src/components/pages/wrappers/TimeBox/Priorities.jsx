@@ -1,40 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Select, Tag, message } from "antd";
 import { CloseCircleFilled } from "@ant-design/icons";
 import { FiClock, FiFlag, FiCheckCircle } from "react-icons/fi";
 
 export default function Priorities({ dayTask, setDayTask }) {
-  // brainDump is passed dynamically from the parent component
-  const brainDumps = dayTask.brainDump; // Use dynamic brain dumps from parent state
-
-  const [selectedTasks, setSelectedTasks] = useState(
-    dayTask.brainDump.filter((task) => task.selected)
-  );
-
-  // Update the parent component whenever the selected tasks change
-  useEffect(() => {
-    setDayTask((prev) => ({
-      ...prev,
-      brainDump: brainDumps.map((task) =>
-        selectedTasks.some((selected) => selected.id === task.id)
-          ? { ...task, selected: true }
-          : { ...task, selected: false }
-      ),
-    }));
-  }, [selectedTasks, brainDumps, setDayTask]);
+  const [selectedTasks, setSelectedTasks] = useState([]);
 
   const handleSelect = (values) => {
     if (values.length > 3) {
       message.warning("Maximum 3 priorities allowed");
       return;
     }
-    setSelectedTasks(
-      values.map((id) => brainDumps.find((task) => task.id === id))
+    const updatedTasks = values.map((id) =>
+      dayTask.brainDump.find((task) => task.id === id)
     );
-  };
 
+    setSelectedTasks(updatedTasks);
+
+    setDayTask((prev) => ({
+      ...prev,
+      priorities: updatedTasks,
+    }));
+  };
   const removeTask = (taskId) => {
-    setSelectedTasks((prev) => prev.filter((task) => task.id !== taskId));
+    const updatedTasks = selectedTasks.filter((task) => task.id !== taskId);
+
+    setSelectedTasks(updatedTasks);
+
+    setDayTask((prev) => ({
+      ...prev,
+      priorities: updatedTasks,
+    }));
+
     message.success("Priority removed");
   };
 
@@ -65,7 +62,7 @@ export default function Priorities({ dayTask, setDayTask }) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-3 bg-white dark:bg-gray-800 rounded-xl">
+    <div className="max-w-2xl mx-auto p-3 bg- white dark:bg-gr ay-800 rounded-xl ">
       <div className="space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <label className="text-3xl font-bold text-right text-gray-800 dark:text-white mb-4">
@@ -85,9 +82,9 @@ export default function Priorities({ dayTask, setDayTask }) {
           onChange={handleSelect}
           maxTagCount="responsive"
           className="w-full"
-          options={brainDumps.map((task) => ({
+          options={dayTask.brainDump.map((task) => ({
             value: task.id,
-            label: task.task, // Assuming task.title is the correct key
+            label: task.task,
             disabled:
               selectedTasks.length >= 3 &&
               !selectedTasks.find((t) => t.id === task.id),
@@ -111,7 +108,7 @@ export default function Priorities({ dayTask, setDayTask }) {
               closable
             >
               <span className="max-w-[200px] sm:max-w-[300px] truncate">
-                {task.task} {/* Make sure you use task.task */}
+                {task.task}
               </span>
             </Tag>
           ))}
