@@ -1,67 +1,105 @@
 import React, { useState } from "react";
-import { Form, Input, Button, List, message } from "antd";
+import { Form, Input, Button, List, Select, message, Tag } from "antd";
 import {
   DeleteOutlined,
   PlusOutlined,
   EditOutlined,
   SaveOutlined,
 } from "@ant-design/icons";
+import { FiFlag, FiClock, FiCheckCircle } from "react-icons/fi";
 
-export default function BrainDumps() {
-  const [tasks, setTasks] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null); // Track the index of the task being edited
-  const [form] = Form.useForm(); // Ant Design form instance
+export default function BrainDumps({ dayTask, setDayTask }) {
+  const [tasks, setTasks] = useState(dayTask.brainDump || []); // Initialize with tasks from parent state
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [form] = Form.useForm();
 
-  // Function to handle adding a task
-  const addTask = (values) => {
-    const { task } = values;
-    if (task.trim()) {
-      setTasks([...tasks, task]);
-      form.resetFields(); // Clear the input field
-      message.success("Task added!");
+  const priorityOptions = [
+    { label: "High", value: "High" },
+    { label: "Medium", value: "Medium" },
+    { label: "Low", value: "Low" },
+  ];
+
+  const handleSubmit = (values) => {
+    const { task, priority } = values;
+
+    // Update tasks based on whether it's editing or adding a new task
+    if (editingIndex !== null) {
+      const updatedTasks = [...tasks];
+      updatedTasks[editingIndex] = {
+        ...updatedTasks[editingIndex],
+        // id: editingIndex+1,
+        task,
+        priority,
+      };
+      setTasks(updatedTasks);
+      setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
+      setEditingIndex(null);
+      message.success("Task updated!");
     } else {
-      message.error("Task cannot be empty!");
+      const newTask = {id: tasks.length +1 , task, priority: priority || "Medium" };
+      const updatedTasks = [...tasks, newTask];
+      setTasks(updatedTasks);
+      setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
+      message.success("Task added!");
     }
+
+    form.resetFields();
   };
 
-  // Function to handle removing a task
   const removeTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
+    setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
     message.success("Task removed!");
   };
 
-  // Function to handle editing a task
   const startEditing = (index) => {
+    const taskToEdit = tasks[index];
     setEditingIndex(index);
-    form.setFieldsValue({ task: tasks[index] }); // Populate the input field with the task to edit
+    form.setFieldsValue({
+      task: taskToEdit.task,
+      priority: taskToEdit.priority,
+    });
   };
 
-  // Function to save the edited task
-  const saveTask = (values) => {
-    const { task } = values;
-    if (task.trim()) {
-      const updatedTasks = [...tasks];
-      updatedTasks[editingIndex] = task;
-      setTasks(updatedTasks);
-      setEditingIndex(null); // Exit editing mode
-      form.resetFields(); // Clear the input field
-      message.success("Task updated!");
-    } else {
-      message.error("Task cannot be empty!");
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "High":
+        return "bg-red-500 dark:bg-red-800";
+      case "Medium":
+        return "bg-yellow-500 dark:bg-yellow-700";
+      case "Low":
+        return "bg-green-500 dark:bg-green-700";
+      default:
+        return "bg-blue-500 dark:bg-blue-700";
+    }
+  };
+
+  const getPriorityIcon = (priority) => {
+    switch (priority) {
+      case "High":
+        return <FiFlag />;
+      case "Medium":
+        return <FiClock />;
+      case "Low":
+        return <FiCheckCircle />;
+      default:
+        return null;
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 rounded-xl ">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+    <div className="max-w-3xl mx-auto p-6 rounded-xl">
+      <h1 className="text-3xl font-bold mb-6 text-left text-gray-800 dark:text-white">
         🧠 Brain Dumps
       </h1>
 
-      {/* Form for adding or editing tasks */}
+      {/* Task Form */}
       <Form
         form={form}
-        onFinish={editingIndex !== null ? saveTask : addTask} // Use saveTask if editing, otherwise addTask
-        className="flex flex-col sm:flex-row gap-4 mb-3"
+        onFinish={handleSubmit}
+        initialValues={{ priority: "Medium" }}
+        className="flex flex-col sm:flex-row gap-4 mb-6"
       >
         <Form.Item
           name="task"
@@ -74,6 +112,14 @@ export default function BrainDumps() {
             }
             size="large"
             className="w-full"
+          />
+        </Form.Item>
+        <Form.Item name="priority">
+          <Select
+            placeholder="Priority"
+            options={priorityOptions}
+            size="large"
+            className="w-full sm:w-40"
           />
         </Form.Item>
         <Form.Item>
@@ -89,37 +135,43 @@ export default function BrainDumps() {
         </Form.Item>
       </Form>
 
-      {/* Render task list */}
-      <div className="rounded-lg shadow-lg bg-white dark:bg-sky-800 dark:text-white ">
+      {/* Task List */}
+      <div className="rounded-lg shadow-lg bg-white dark:bg-sky-600 dark:text-white p">
         {tasks.length > 0 ? (
           <List
             bordered
-            className="rounded-lg "
+            className="rounded-lg"
             dataSource={tasks}
-            renderItem={(task, index) => (
+            renderItem={(item, index) => (
               <List.Item
                 actions={[
                   <EditOutlined
+                    title="Edit Task"
                     key="edit"
                     onClick={() => startEditing(index)}
-                    className="text-blue-500 text-lg"
+                    className="text-blue-900 text-lg"
                   />,
                   <DeleteOutlined
+                    title="Delete Task"
                     key="delete"
                     onClick={() => removeTask(index)}
                     className="text-red-500 text-lg"
                   />,
                 ]}
-                className="text-gray-800 dark:text-gray-100 ga p-4"
               >
-                {task}
+                <Tag
+                  className={`flex border-none dark:text-white items-center gap-2 px-3 py-1 text-sm rounded-xl  ${getPriorityColor(
+                    item.priority
+                  )}`}
+                  icon={getPriorityIcon(item.priority)}
+                >
+                  {item.task}
+                </Tag>
               </List.Item>
             )}
           />
         ) : (
-          <p className=" text-center p-4">
-            No tasks yet. Add your first one!
-          </p>
+          <p className="text-center p-3">No tasks yet. Add your first one!</p>
         )}
       </div>
     </div>
