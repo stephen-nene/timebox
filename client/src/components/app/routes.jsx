@@ -47,8 +47,8 @@ export const routeConfig = [
   {
     path: "/timebox",
     element: TomeBox,
-    protected: true,
-    allowPendingAccess: false,
+    // protected: true,
+    // allowPendingAccess: false,
   },
   {
     path: "/finances/new",
