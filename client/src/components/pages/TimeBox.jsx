@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import BrainDumps from "./wrappers/TimeBox/BrainDumps.jsx";
 import TimeFrames from "./wrappers/TimeBox/TimeFrames.jsx";
 import Priorities from "./wrappers/TimeBox/Priorities.jsx";
 import DateSelector from "./wrappers/TimeBox/DateSelector.jsx";
 
+import {
+  initializeDB,
+  addTimeFrame,
+  getDayTask,
+  getTimeFramesByDate,
+} from "../../helpers/indexDb/indexedDB";
+// Helper function to format the date in dd/mm/yyyy
+const formatDate = (date) => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
 export default function TimeBox() {
+  const [db, setDb] = React.useState(null); // IndexedDB instance
+
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [timeFrame, setTimeFrame] = React.useState([]);
@@ -12,13 +27,40 @@ export default function TimeBox() {
     user_id: userData?.data?.id || null,
     brainDump: [],
     priorities: [],
-    date: selectedDate,
+    date: formatDate(selectedDate),
   });
 
-  const validationMessages = {
-    brainDump:
-      "Add at least 3 items to your Brain Dump to proceed to Priorities.",
-    priorities: "Add at least 3 Priorities to proceed to Time Frames.",
+  useEffect(() => {
+    setDayTask((prevState) => ({
+      ...prevState,
+      date: formatDate(selectedDate),
+    }));
+  }, [selectedDate]);
+
+  // console.log(dayTask);
+
+  // Initialize IndexedDB on mount
+  useEffect(() => {
+    initializeDB().then(setDb).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    if (db) {
+      fetchDayTaskAndTimeFrames();
+    }
+  }, [db, selectedDate]);
+
+  const fetchDayTaskAndTimeFrames = async () => {
+    const task = await getDayTask(db, formatDate(selectedDate));
+    // console.log(task);
+    setDayTask(prevState => ({
+      ...prevState,
+      brainDump: task?.brainDump || [],
+      priorities: task?.priorities || []
+    }));
+    // const frames = await getTimeFramesByDate(db, selectedDate);
+    // setDayTask(task || { date: selectedDate, brainDump: [], priorities: [] });
+    // setTimeFrames(frames || []);
   };
 
   return (
@@ -39,11 +81,11 @@ export default function TimeBox() {
           </div>
           {dayTask.brainDump.length >= 3 ? (
             <div className="bg-green-100 dark:bg-green-800 rounded-lg p-4">
-              <Priorities dayTask={dayTask} setDayTask={setDayTask} />
+              <Priorities db={db} dayTask={dayTask} setDayTask={setDayTask} />
             </div>
           ) : (
             <div className="text-red-500 text-sm mt-2">
-              {validationMessages.brainDump}
+              Add at least 3 items to your Brain Dump to proceed to Priorities.
             </div>
           )}
         </div>
@@ -58,7 +100,8 @@ export default function TimeBox() {
           </div>
         ) : (
           <div className="text-red-500 text-sm lg:col-span-2 mt-4">
-            {dayTask.brainDump.length >= 3 && validationMessages.priorities}
+            {dayTask.brainDump.length >= 3 &&
+              "Add at least 3 Priorities to proceed to Time Frames."}
           </div>
         )}
       </div>

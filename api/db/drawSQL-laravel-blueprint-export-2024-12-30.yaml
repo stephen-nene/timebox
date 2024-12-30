@@ -1,0 +1,19 @@
+models:
+    TimeFrame:
+        id: integer primary
+        day_task_id: integer foreign:day_task.id
+        status: enum:""
+        title: text
+        description: text
+        start: time
+        end: time
+        text_color: text
+        background_color: text
+        start_recurring: timestamp
+        end_recurring: timestamp
+        recurring_days: json
+    DayTask:
+        id: integer primary
+        brain_dumps: json
+        priorities: json
+        date: date primary

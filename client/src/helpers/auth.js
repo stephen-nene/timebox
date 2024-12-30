@@ -38,7 +38,7 @@ export const getCurrentUser = async (dispatch, navigate) => {
       throw new Error("Failed to fetch user data");
     }
   } catch (error) {
-    // console.log(error?.response?.data);
+    // console.log(error);
     // showMessage("error", error?.response?.data?.error || "An error occurred", 3);
   }
 };
