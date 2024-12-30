@@ -9,7 +9,6 @@ import {
 import { FiFlag, FiClock, FiCheckCircle } from "react-icons/fi";
 
 export default function BrainDumps({ dayTask, setDayTask }) {
-  const [tasks, setTasks] = useState(dayTask.brainDump || []); // Initialize with tasks from parent state
   const [editingIndex, setEditingIndex] = useState(null);
   const [form] = Form.useForm();
 
@@ -24,21 +23,22 @@ export default function BrainDumps({ dayTask, setDayTask }) {
 
     // Update tasks based on whether it's editing or adding a new task
     if (editingIndex !== null) {
-      const updatedTasks = [...tasks];
+      const updatedTasks = [...dayTask.brainDump];
       updatedTasks[editingIndex] = {
         ...updatedTasks[editingIndex],
-        // id: editingIndex+1,
         task,
         priority,
       };
-      setTasks(updatedTasks);
       setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
       setEditingIndex(null);
       message.success("Task updated!");
     } else {
-      const newTask = {id: tasks.length +1 , task, priority: priority || "Medium" };
-      const updatedTasks = [...tasks, newTask];
-      setTasks(updatedTasks);
+      const newTask = {
+        id: dayTask.brainDump.length + 1,
+        task,
+        priority: priority || "Medium",
+      };
+      const updatedTasks = [...dayTask.brainDump, newTask];
       setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
       message.success("Task added!");
     }
@@ -47,14 +47,13 @@ export default function BrainDumps({ dayTask, setDayTask }) {
   };
 
   const removeTask = (index) => {
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
+    const updatedTasks = dayTask.brainDump.filter((_, i) => i !== index);
     setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
     message.success("Task removed!");
   };
 
   const startEditing = (index) => {
-    const taskToEdit = tasks[index];
+    const taskToEdit = dayTask.brainDump[index];
     setEditingIndex(index);
     form.setFieldsValue({
       task: taskToEdit.task,
@@ -137,11 +136,11 @@ export default function BrainDumps({ dayTask, setDayTask }) {
 
       {/* Task List */}
       <div className="rounded-lg shadow-lg bg-white dark:bg-sky-600 dark:text-white p">
-        {tasks.length > 0 ? (
+        {dayTask.brainDump.length > 0 ? (
           <List
             bordered
             className="rounded-lg"
-            dataSource={tasks}
+            dataSource={dayTask.brainDump}
             renderItem={(item, index) => (
               <List.Item
                 actions={[
