@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Select, Tag, message } from "antd";
 import { CloseCircleFilled } from "@ant-design/icons";
 import { FiClock, FiFlag, FiCheckCircle } from "react-icons/fi";
-import { addDayTask, getDayTask } from "../../../../helpers/indexDb/indexedDB";
+import { addDayTask, getDayTask,formatDate } from "../../../../helpers/indexDb/indexedDB";
 
 export default function Priorities({ db, dayTask, setDayTask }) {
 
@@ -10,7 +10,7 @@ export default function Priorities({ db, dayTask, setDayTask }) {
     if (db) {
       const res = await addDayTask(db, dayTask);
       message.success("Priority tasks saved");
-      // fetchDayTaskAndTimeFrames(); 
+      fetchDayTaskAndTimeFrames(); 
     }
   };
 

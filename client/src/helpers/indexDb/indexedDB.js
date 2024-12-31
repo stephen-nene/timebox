@@ -71,17 +71,31 @@ export function getDayTask(db, date) {
   });
 }
 
-export function getTimeFramesByDate(db, date) {
+export function getTimeFramesByDate(db, datTaskId) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("TimeFrame", "readonly");
     const store = transaction.objectStore("TimeFrame");
-    const index = store.index("day_task_date");
-    const request = index.getAll(date);
+    const index = store.index("day_task_id");
+    const request = index.getAll(datTaskId);
 
     request.onsuccess = () => resolve(request.result);
     request.onerror = (event) => reject(event.target.error);
   });
 }
+
+
+
+export const deleteTimeFrame = async (db, id) => {
+  const transaction = db.transaction("TimeFrame", "readwrite");
+  const store = transaction.objectStore("TimeFrame");
+
+  return new Promise((resolve, reject) => {
+    const request = store.delete(id);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(new Error("Failed to delete time frame"));
+  });
+};
+
 
 export function cleanUpOldData(db) {
   return new Promise((resolve, reject) => {
@@ -105,3 +119,10 @@ export function cleanUpOldData(db) {
     request.onerror = (event) => reject(event.target.error);
   });
 }
+
+export const formatDate = (date) => {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};

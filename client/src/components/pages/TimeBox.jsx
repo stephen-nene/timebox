@@ -9,15 +9,11 @@ import {
   addTimeFrame,
   getDayTask,
   getTimeFramesByDate,
+  formatDate,
 } from "../../helpers/indexDb/indexedDB";
 import { INITIAL_EVENTS } from "./wrappers/TimeBox/event-utils.js";
 
-const formatDate = (date) => {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
-};
+
 export default function TimeBox() {
   const [db, setDb] = React.useState(null); 
 
@@ -42,7 +38,7 @@ export default function TimeBox() {
     }));
   }, [selectedDate]);
 
-  // console.log(dayTask);
+  // console.log(timeFrame);
 
   // Initialize IndexedDB on mount
 useEffect(() => {
@@ -64,9 +60,12 @@ useEffect(() => {
 
   // console.log(dayTask);
 
-  const fetchDayTaskAndTimeFrames = async () => {
+const fetchDayTaskAndTimeFrames = async () => {
+  try {
+    // Fetch day task
     const task = await getDayTask(db, formatDate(selectedDate));
-    // console.log(task);
+
+    // Update day task state
     setDayTask((prevState) => ({
       ...prevState,
       id: task?.id || generateUniqueId(),
@@ -74,11 +73,22 @@ useEffect(() => {
       priorities: task?.priorities || [],
       sync: task?.sync || false,
       timestamp: task?.timestamp || Date.now(),
-    })); 
-    // const frames = await getTimeFramesByDate(db, selectedDate);
-    // setDayTask(task || { date: selectedDate, brainDump: [], priorities: [] });
-    // setTimeFrames(frames || []);
-  };
+    }));
+
+    const taskId = task?.id ;
+    if (!taskId) {
+      console.error("Task ID is undefined. Cannot fetch timeframes.");
+      return;
+    }
+
+    const frames = await getTimeFramesByDate(db, taskId);
+
+    setTimeFrame((prevTimeFrames) => [...prevTimeFrames, ...frames]);
+  } catch (error) {
+    console.error("Error in fetchDayTaskAndTimeFrames:", error);
+  }
+};
+
 function generateUniqueId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
 }
@@ -113,10 +123,12 @@ function generateUniqueId() {
         {dayTask.priorities.length >= 3 ? (
           <div className="bg-yellow-100 dark:bg-yellow-800 rounded-lg p-4 md:col-span-2 md:row-span-2">
             <TimeFrames
+              dayTask={dayTask}
               timeFrame={timeFrame}
-              setTimeFrame={setTimeFrame} 
+              setTimeFrame={setTimeFrame}
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
+              db={db}
             />
           </div>
         ) : (

@@ -33,7 +33,7 @@ export default function DateSelector({ selectedDate, setSelectedDate }) {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between p-4 bg-white dark:bg-sky-800 rounded-lg shadow-md transition-colors duration-200">
+    <div className="dateselector flex flex-col sm:flex-row items-center justify-between p-4 bg-white dark:bg-sky-800 rounded-lg shadow-md transition-colors duration-200">
       {/* Left section: Navigation Buttons */}
       <div className="flex items-center gap-3 mb-4 sm:mb-0">
         <button

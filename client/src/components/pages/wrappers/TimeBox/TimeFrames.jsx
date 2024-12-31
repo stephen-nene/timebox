@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { Modal } from "antd";
 
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { INITIAL_EVENTS, generateUniqueId } from "./event-utils";
 
-import  NewTf  from "../../../modals/NewTf";
-import  ViewTf  from '../../../modals/ViewTf'
+import NewTf from "../../../modals/NewTf";
+import ViewTf from "../../../modals/ViewTf";
 
 export default function TimeFrames({
+  dayTask,
   timeFrame,
   setTimeFrame,
   selectedDate,
   setSelectedDate,
+  db,
 }) {
   const calendarRef = React.useRef(null);
   useEffect(() => {
@@ -26,13 +28,19 @@ export default function TimeFrames({
       dayViewButton.click();
     }
   }, [selectedDate]);
-  
+
   return (
     <div className="p-6 ">
       <h2 className="text-3xl font-bold text-left text-gray-800 dark:text-white mb-4">
         ⏰ Time Frames
       </h2>
-      <TimeFrame calendarRef={calendarRef} timeFrame={timeFrame} />
+      <TimeFrame
+        calendarRef={calendarRef}
+        timeFrame={timeFrame}
+        setTimeFrame={setTimeFrame}
+        dayTask={dayTask}
+        db={db}
+      />
       {/* <p className="text-lg text-gray-700 dark:text-gray-300 text-center">
         Manage your time effectively and stay on top of your tasks!
       </p> */}
@@ -40,7 +48,7 @@ export default function TimeFrames({
   );
 }
 
-const TimeFrame = ({ calendarRef, timeFrame }) => {
+const TimeFrame = ({ calendarRef, timeFrame, setTimeFrame, dayTask, db }) => {
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
 
@@ -49,25 +57,35 @@ const TimeFrame = ({ calendarRef, timeFrame }) => {
 
   const userData = JSON.parse(localStorage.getItem("userData"));
 
-  const handleDateClick = (arg) => {
-    message.success(arg.dateStr);
-    console.log(arg);
-  };
-
   function handleDateSelect(selectInfo) {
-    console.log(selectInfo)
-    setIsNewOpen(true);
+    console.log(selectInfo);
     setCalendarApi(selectInfo);
+    setIsNewOpen(true);
   }
 
-  function handleEventClick(clickInfo) {
+  function handleEventClick(clickInfo, eventInfo) {
+    clickInfo.jsEvent.preventDefault();
+
     setSelectedEvent(clickInfo);
-    console.log(clickInfo);
-    setIsViewOpen(true);
-  }
 
-  function handleEvents(events) {
-    console.log(events);
+    if (clickInfo.event.url) {
+      Modal.confirm({
+        title: "Open Link or View Event?",
+        content: "Would you like to open the event's link or view its details?",
+        okText: "Open Link",
+        cancelText: "View Details",
+        onOk: () => {
+          window.open(clickInfo.event.url, "_blank");
+        },
+        onCancel: () => {
+          setIsViewOpen(true);
+          console.log("Event Info:", clickInfo);
+        },
+      });
+    } else {
+      setIsViewOpen(true);
+      console.log("Event Info:", clickInfo);
+    }
   }
 
   function handleEventChange(selectInfo, eventInfo) {
@@ -80,7 +98,6 @@ const TimeFrame = ({ calendarRef, timeFrame }) => {
     // console.log("old", selectInfo, "new", selectInfo.oldEvent.endStr)
   }
 
-  const events = [ ...timeFrame];
   return (
     <>
       <section
@@ -93,7 +110,8 @@ const TimeFrame = ({ calendarRef, timeFrame }) => {
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="timeGridDay"
             headerToolbar={
-              userData?.data?.role === "user"
+              // userData?.data?.role === "user"
+              !userData
                 ? {
                     // center: "prev,today,next",
                     left: "title",
@@ -102,32 +120,62 @@ const TimeFrame = ({ calendarRef, timeFrame }) => {
                 : false
             }
             select={handleDateSelect}
-            // events={INITIAL_EVENTS}
-            events={events}
-            // dateClick={handleDateClick}
+            events={timeFrame}
             selectable={true}
             eventClick={handleEventClick}
-            // eventsSet={handleEvents}
             eventChange={handleEventChange}
+            eventMouseEnter={function (info) {
+              // console.log("eventMouseEnter", info);
+              const eventElement = info.el; // The event's DOM element
+              if (eventElement) {
+                eventElement.style.cursor = "pointer"; // Set cursor to pointer
+              }
+            }}
+            eventMouseLeave={function (info) {
+              // console.log("eventMouseLeave", info);
+              const eventElement = info.el; // The event's DOM element
+              if (eventElement) {
+                eventElement.style.cursor = "default"; // Reset cursor to default
+              }
+            }}
+            // eventOverlap={!false}
+            eventResize={function (info) {
+              alert(
+                info.event.title + " end is now " + info.event.end.toISOString()
+              );
+
+              if (!confirm("is this okay?")) {
+                info.revert();
+              }
+            }}
             editable={true}
             height="auto"
             nowIndicator={true}
             viewClassNames="bg-blue-5 00 text- white"
+            // nextDayThreshold="00:00:00" // Ensure events spanning midnight are handled
           />
         </div>
       </section>
-
-      <NewTf
-        isOpen={isNewOpen}
-        onClose={() => setIsNewOpen(false)}
-        calendarApi={calendarApi}
-        timeFrame={timeFrame}
-      />
-      <ViewTf
-        isOpen={isViewOpen}
-        onClose={() => setIsViewOpen(false)}
-        event={selectedEvent}
-      />
+      {isNewOpen && (
+        <NewTf
+          isOpen={isNewOpen}
+          onClose={() => setIsNewOpen(false)}
+          calendarApi={calendarApi}
+          dayTask={dayTask}
+          setTimeFrame={setTimeFrame}
+          db={db}
+        />
+      )}
+      {/* isOpen, onClose, event, setEventData, db, */}
+      {isViewOpen && (
+        <ViewTf
+          isOpen={isViewOpen}
+          onClose={() => setIsViewOpen(false)}
+          event={selectedEvent}
+          setTimeFrame={setTimeFrame}
+          db={db}
+        />
+      )}
       {/* {newTf && <NewTf newTf={newTf} setNewTf={setNewTf} />} */}
     </>
   );
