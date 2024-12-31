@@ -10,7 +10,8 @@ import {
   getDayTask,
   getTimeFramesByDate,
 } from "../../helpers/indexDb/indexedDB";
-// Helper function to format the date in dd/mm/yyyy
+import { INITIAL_EVENTS } from "./wrappers/TimeBox/event-utils.js";
+
 const formatDate = (date) => {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -18,11 +19,11 @@ const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 export default function TimeBox() {
-  const [db, setDb] = React.useState(null); // IndexedDB instance
+  const [db, setDb] = React.useState(null); 
 
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [timeFrame, setTimeFrame] = React.useState([]);
+  const [timeFrame, setTimeFrame] = React.useState([...INITIAL_EVENTS]);
   const [dayTask, setDayTask] = React.useState({
     id: generateUniqueId(),
     user_id: userData?.data?.id || null,
@@ -44,9 +45,15 @@ export default function TimeBox() {
   // console.log(dayTask);
 
   // Initialize IndexedDB on mount
-  useEffect(() => {
-    initializeDB().then(setDb).catch(console.error);
-  }, []);
+useEffect(() => {
+  initializeDB()
+    .then(setDb)
+    .catch((error) => {
+      console.error("Failed to initialize IndexedDB:", error);
+      // Handle the error gracefully, e.g., notify the user
+    });
+}, []);
+
 
   useEffect(() => {
     if (db) {
@@ -59,7 +66,7 @@ export default function TimeBox() {
 
   const fetchDayTaskAndTimeFrames = async () => {
     const task = await getDayTask(db, formatDate(selectedDate));
-    console.log(task);
+    // console.log(task);
     setDayTask((prevState) => ({
       ...prevState,
       id: task?.id || generateUniqueId(),

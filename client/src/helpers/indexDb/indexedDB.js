@@ -8,10 +8,6 @@ export function initializeDB() {
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
 
-      // Create DayTask object store with composite key [date]
-      // if (!db.objectStoreNames.contains("DayTask")) {
-      //   db.createObjectStore("DayTask", { keyPath: "date" });
-      // }
       if (!db.objectStoreNames.contains("DayTask")) {
         const dayTaskStore = db.createObjectStore("DayTask", { keyPath: "id" }); // id is the primary key
         dayTaskStore.createIndex("date", "date", { unique: true }); // For querying by date
@@ -28,7 +24,11 @@ export function initializeDB() {
         timeFrameStore.createIndex("day_task_id", "day_task_id", {
           unique: false,
         });
-      }
+        timeFrameStore.createIndex("sync", "sync", { unique: false });
+        timeFrameStore.createIndex("timestamp", "timestamp", {
+          unique: false,
+        });
+      } 
     };
 
     request.onsuccess = () => resolve(request.result);
@@ -40,7 +40,7 @@ export function addDayTask(db, dayTask) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("DayTask", "readwrite");
     const store = transaction.objectStore("DayTask");
-    const request = store.put(dayTask); // `put` to allow updating existing data
+    const request = store.put(dayTask); 
 
     request.onsuccess = () => resolve(request.result);
     request.onerror = (event) => reject(event.target.error);
@@ -51,23 +51,14 @@ export function addTimeFrame(db, timeFrame) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("TimeFrame", "readwrite");
     const store = transaction.objectStore("TimeFrame");
-    const request = store.add(timeFrame);
+    const request = store.put(timeFrame);
 
     request.onsuccess = () => resolve(request.result);
     request.onerror = (event) => reject(event.target.error);
   });
 }
 
-// export function getDayTask(db, date) {
-//   return new Promise((resolve, reject) => {
-//     const transaction = db.transaction("DayTask", "readonly");
-//     const store = transaction.objectStore("DayTask");
-//     const request = store.get(date);
 
-//     request.onsuccess = () => resolve(request.result);
-//     request.onerror = (event) => reject(event.target.error);
-//   });
-// }
 export function getDayTask(db, date) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("DayTask", "readonly");
@@ -79,7 +70,6 @@ export function getDayTask(db, date) {
     request.onerror = (event) => reject(event.target.error);
   });
 }
-
 
 export function getTimeFramesByDate(db, date) {
   return new Promise((resolve, reject) => {

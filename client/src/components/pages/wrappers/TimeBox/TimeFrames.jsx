@@ -4,7 +4,7 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { INITIAL_EVENTS, createEventId } from "./event-utils";
+import { INITIAL_EVENTS, generateUniqueId } from "./event-utils";
 
 import  NewTf  from "../../../modals/NewTf";
 import  ViewTf  from '../../../modals/ViewTf'
@@ -80,7 +80,7 @@ const TimeFrame = ({ calendarRef, timeFrame }) => {
     // console.log("old", selectInfo, "new", selectInfo.oldEvent.endStr)
   }
 
-  const events = [...INITIAL_EVENTS, ...timeFrame];
+  const events = [ ...timeFrame];
   return (
     <>
       <section

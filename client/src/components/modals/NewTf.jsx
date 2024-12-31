@@ -1,6 +1,6 @@
 import { Modal, Button, Form, TimePicker, Switch, Input, ColorPicker, Space, message } from 'antd';
 import { useSelector } from 'react-redux';
-import { createEventId } from '../pages/wrappers/TimeBox/event-utils';
+import { generateUniqueId } from "../pages/wrappers/TimeBox/event-utils";
 // import {handleCreateTframe} from '../../utils/ServerCom'
 
 export default function NewTf({ isOpen, onClose, calendarApi, dayTask }) {
@@ -35,6 +35,7 @@ const handleSave = async () => {
       textColor: textHex,
       borderColor: borderHex,
       description,
+      allDay: true
     };
 message.info('Saving event...');
     // Send data to backend
@@ -43,11 +44,11 @@ message.info('Saving event...');
     // if (response && response.status === 201) {
     //   // Add event to calendar only if backend save succeeds
     // }
-    kalai.addEvent({
-      id: createEventId(),
-      ...formData,
-      allDay: calendarApi.allDay,
-    });
+  const res = kalai.addEvent({
+    id: generateUniqueId(),
+    ...formData,
+  });
+  console.log(res)
 
     // Reset form fields and close modal
     form.resetFields();
