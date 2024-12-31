@@ -16,3 +16,13 @@
   border-color: #4b5563 !important;
   color: #fff !important;
 }
+
+
+.dark .fc-view thead {
+      background-color: skyblue;
+
+}
+
+.fc-view thead {
+      background-color: #00e1ff
+}

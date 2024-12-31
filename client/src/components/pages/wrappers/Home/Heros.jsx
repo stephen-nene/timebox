@@ -61,7 +61,7 @@ export default function Heros() {
               Get Started
             </Link>
             <Link
-              to="/calendar"
+              to="/timebox"
               className="px-6 py-3 text-base font-semibold text-sky-600 border border-sky-500 rounded-full hover:text-white hover:bg-sky-500 transition-transform duration-300 transform hover:scale-105 focus:ring-2 focus:ring-sky-500 focus:outline-none focus:ring-opacity-50"
             >
               View Calendar

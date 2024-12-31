@@ -24,16 +24,20 @@ export default function TimeBox() {
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [timeFrame, setTimeFrame] = React.useState([]);
   const [dayTask, setDayTask] = React.useState({
+    id: generateUniqueId(),
     user_id: userData?.data?.id || null,
     brainDump: [],
     priorities: [],
     date: formatDate(selectedDate),
+    sync: false,
+    timestamp: Date.now(),
   });
 
   useEffect(() => {
     setDayTask((prevState) => ({
       ...prevState,
       date: formatDate(selectedDate),
+      // id: generateUniqueId(),
     }));
   }, [selectedDate]);
 
@@ -49,20 +53,28 @@ export default function TimeBox() {
       fetchDayTaskAndTimeFrames();
     }
   }, [db, selectedDate]);
+ 
+
+  // console.log(dayTask);
 
   const fetchDayTaskAndTimeFrames = async () => {
     const task = await getDayTask(db, formatDate(selectedDate));
-    // console.log(task);
-    setDayTask(prevState => ({
+    console.log(task);
+    setDayTask((prevState) => ({
       ...prevState,
+      id: task?.id || generateUniqueId(),
       brainDump: task?.brainDump || [],
-      priorities: task?.priorities || []
-    }));
+      priorities: task?.priorities || [],
+      sync: task?.sync || false,
+      timestamp: task?.timestamp || Date.now(),
+    })); 
     // const frames = await getTimeFramesByDate(db, selectedDate);
     // setDayTask(task || { date: selectedDate, brainDump: [], priorities: [] });
     // setTimeFrames(frames || []);
   };
-
+function generateUniqueId() {
+  return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+}
   return (
     <div className="min-h-screen p-4">
       {/* Date Selector at the top */}
@@ -94,6 +106,8 @@ export default function TimeBox() {
         {dayTask.priorities.length >= 3 ? (
           <div className="bg-yellow-100 dark:bg-yellow-800 rounded-lg p-4 md:col-span-2 md:row-span-2">
             <TimeFrames
+              timeFrame={timeFrame}
+              setTimeFrame={setTimeFrame} 
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
             />

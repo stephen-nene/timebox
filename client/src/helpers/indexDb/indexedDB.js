@@ -9,16 +9,23 @@ export function initializeDB() {
       const db = event.target.result;
 
       // Create DayTask object store with composite key [date]
+      // if (!db.objectStoreNames.contains("DayTask")) {
+      //   db.createObjectStore("DayTask", { keyPath: "date" });
+      // }
       if (!db.objectStoreNames.contains("DayTask")) {
-        db.createObjectStore("DayTask", { keyPath: "date" }); // date is the primary key
+        const dayTaskStore = db.createObjectStore("DayTask", { keyPath: "id" }); // id is the primary key
+        dayTaskStore.createIndex("date", "date", { unique: true }); // For querying by date
+        dayTaskStore.createIndex("sync", "sync", { unique: false }); // For querying unsynced tasks
+        dayTaskStore.createIndex("timestamp", "timestamp", { unique: false }); // For purging old tasks
       }
+
       // Create TimeFrame object store
       if (!db.objectStoreNames.contains("TimeFrame")) {
         const timeFrameStore = db.createObjectStore("TimeFrame", {
           keyPath: "id",
           autoIncrement: true,
         });
-        timeFrameStore.createIndex("day_task_date", "day_task_date", {
+        timeFrameStore.createIndex("day_task_id", "day_task_id", {
           unique: false,
         });
       }
@@ -51,16 +58,28 @@ export function addTimeFrame(db, timeFrame) {
   });
 }
 
+// export function getDayTask(db, date) {
+//   return new Promise((resolve, reject) => {
+//     const transaction = db.transaction("DayTask", "readonly");
+//     const store = transaction.objectStore("DayTask");
+//     const request = store.get(date);
+
+//     request.onsuccess = () => resolve(request.result);
+//     request.onerror = (event) => reject(event.target.error);
+//   });
+// }
 export function getDayTask(db, date) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction("DayTask", "readonly");
     const store = transaction.objectStore("DayTask");
-    const request = store.get(date);
+    const index = store.index("date"); // Use the date index
+    const request = index.get(date); // Get all tasks for the given date
 
     request.onsuccess = () => resolve(request.result);
     request.onerror = (event) => reject(event.target.error);
   });
 }
+
 
 export function getTimeFramesByDate(db, date) {
   return new Promise((resolve, reject) => {
@@ -70,6 +89,29 @@ export function getTimeFramesByDate(db, date) {
     const request = index.getAll(date);
 
     request.onsuccess = () => resolve(request.result);
+    request.onerror = (event) => reject(event.target.error);
+  });
+}
+
+export function cleanUpOldData(db) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction("DayTask", "readwrite");
+    const store = transaction.objectStore("DayTask");
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+      const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in ms
+      const now = Date.now();
+      const data = request.result;
+
+      data.forEach((record) => {
+        if (now - record.timestamp > oneWeek) {
+          store.delete(record.date); // Delete stale records
+        }
+      });
+      resolve();
+    };
+
     request.onerror = (event) => reject(event.target.error);
   });
 }
