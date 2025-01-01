@@ -102,7 +102,7 @@ function generateUniqueId() {
         />
       </div>
 
-      <div className="lg:min-h-screen grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="lg:min-h-screen grid md:grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Brain Dumps Section */}
         <div className="flex flex-col space-y-4">
           <div className="bg-blue-100 dark:bg-blue-800 rounded-lg p-4 shadow-lg">

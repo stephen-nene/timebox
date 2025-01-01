@@ -4,7 +4,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { FaBars, FaMoon, FaSun, FaUser } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { setDarkMode } from "../store/actions/appAction";
-import "../assets/styles/navbar.css";
+// import "../assets/styles/navbar.css";
 
 // Extract menu items to separate component
 const MenuItems = ({ onClick, userData, isDashRoute }) => {
@@ -16,9 +16,10 @@ const MenuItems = ({ onClick, userData, isDashRoute }) => {
   ];
 
   const publicLinks = [
-    { to: "/", label: "Home" },
+    // { to: "/", label: "Home" },
     { to: "/timebox", label: "Timebox" },
-    { to: "/contact", label: "Contact" }
+    { to: "/Pomodoro", label: "Pomodoro" },
+    { to: "/contact", label: "Contact" },
   ];
 
   const links = isDashRoute ? dashboardLinks : publicLinks;
@@ -35,7 +36,7 @@ const MenuItems = ({ onClick, userData, isDashRoute }) => {
         <Link
           onClick={onClick}
           to="/login"
-          className="btn bg-green-500 btn-login"
+          className="btn bg-green-500 hover:bg-green-800  btn-login"
         >
           Login
         </Link>
@@ -44,7 +45,7 @@ const MenuItems = ({ onClick, userData, isDashRoute }) => {
       {userData?.role === "admin" && (
         <Link
           to={isDashRoute ? "/" : "/dash"}
-          className="btn bg-green-500  btn-login"
+          className="btn bg-green-500 hover:bg-green-600  btn-login"
         >
           {isDashRoute ? "Public" : "Dashboard"}
         </Link>
@@ -84,10 +85,10 @@ export const Navbar = () => {
 
   return (
     // <div className={``}>
-    <header className=" text-xl navbar bg-sky-500 dark:bg-sky-900  dark:text-white bg -[#1f2c31]">
-      <nav className="container">
+    <header className=" text-xl navbar bg-sky-300 dark:bg-sky-950  dark:text-white bg -[#1f2c31]">
+      <nav className="">
         <div className="navbar-wrapper">
-          <NavLink className="text-2xl text-f font-bold" to="/">
+          <NavLink className="text-2xl hover:text-emerald-700 dark:text font-logo2" to="/">
             TimeBox
           </NavLink>
 

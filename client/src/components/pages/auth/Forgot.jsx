@@ -25,14 +25,13 @@ export const Forgot = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="w-full max-w-md p-8 space-y-6 rounded-xl border shadow-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700">
-        <Typography.Title
-          level={2}
-          className="text-center text-gray-800 dark:text-white"
+    <div className="min-h-screen flex items-center justify-center ">
+      <div className="w-full max-w-lg p-8 space-y-9 rounded-xl border shadow-lg bg-white dark:bg-gray-950 border-gray-300 dark:border-gray-700">
+        <h1
+          className="text-center text-xl font-Sixtyfour text-gray-800 dark:text-white"
         >
-          Forgot Password
-        </Typography.Title>
+          Forgot Password ?
+        </h1>
 
         {/* Alert Messages */}
         {serverMessage && (
@@ -68,7 +67,7 @@ export const Forgot = () => {
             <Input
               placeholder="Enter your email"
               size="large"
-              className="bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200"
+              className="bg-gray-100 mb-5 dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-black"
             />
           </Form.Item>
 

@@ -22,6 +22,7 @@ const AuthRoutes = {
 import { Home } from "../pages/Home";
 import { Profiles } from "../pages/Profiles";
 import TomeBox from "../pages/TimeBox.jsx";
+import Pomodoro from "../pages/Pomodoro.jsx";
 import Contact from "../pages/Contact";
 import Error404 from "../pages/utils/Error404";
 
@@ -29,12 +30,13 @@ import Error404 from "../pages/utils/Error404";
 export const routeConfig = [
   // Public Routes
   { path: "/", element: Home },
+  { path: "/contact", element: Contact },
+  { path: "/pomodoro", element: Pomodoro },
   { path: "/login", element: AuthRoutes.Login },
   { path: "/register", element: AuthRoutes.Register },
   { path: "/forgot", element: AuthRoutes.Forgot },
   { path: "/activate/:token", element: AuthRoutes.Activate },
   { path: "/reset/:token", element: AuthRoutes.Reset },
-  { path: "/contact", element: Contact },
 
   // Protected Routes
   {

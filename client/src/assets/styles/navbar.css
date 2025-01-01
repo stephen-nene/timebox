@@ -1,7 +1,6 @@
 /* General styles */
 .navbar {
-  /* background-color: white; */
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 100%;
   z-index: 10;
@@ -23,7 +22,6 @@
   color: #3182ce;
 }
 
-/* Button styles */
 .btn {
   padding: 4px 10px;
   border-radius: 0.375rem;

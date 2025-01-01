@@ -44,7 +44,7 @@ export default function Footer() {
 
   return (
     <footer
-      className={`bg-sky-500 dark:bg-sky-900 text-gray-800 dark:text-gray-300 transition`}
+      className={`bg-sky-400 dark:bg-sky-950 text-gray-800 dark:text-gray-300 transition`}
     >
       <div className="container px-6 py-12 mx-auto">
         {/* Newsletter Section */}
@@ -57,7 +57,7 @@ export default function Footer() {
               to="/signup"
               className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
             >
-              Sign Up Now
+              Sign Up
             </Link>
           </div>
         </div>

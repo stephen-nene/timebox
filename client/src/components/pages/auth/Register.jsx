@@ -37,16 +37,12 @@ export const Register = ({ darkMode = false }) => {
 
   // Consistent styling for dark and light modes
   const formStyles = {
-    container: `min-h-screen flex items-center justify-center transition-colors duration-300 ${
-      darkMode ? "bg-gray-900" : "bg-gray-100"
-    }`,
-    card: `w-full max-w-md p-8 space-y-6 rounded-xl border shadow-lg ${
-      darkMode
-        ? "bg-gray-800 border-gray-700 text-white"
-        : "bg-white border-gray-300 text-gray-800"
-    }`,
-    input: darkMode ? "bg-gray-700 border-gray-60 " : "bg-whit",
-    title: `text-center mb-6 ${darkMode ? "text-white" : "text-gray-800"}`,
+    container: `min-h-screen flex items-center justify-center transition-colors duration-300 `,
+    card: `w-full max-w-xl p-8 space-y-9 rounded-xl border shadow-lg dark:bg-gray-950 dark:border-gray-700 dark:text-white 
+        bg-white border-gray-300 text-gray-800"
+    `,
+    input: "dark:bg-gray-700  bg-white !important",
+    title: `text-center text-2xl font-Sixtyfour  mb-6 dark:text-white text-gray-800`,
     linkText: darkMode
       ? "text-blue-400 hover:text-blue-300"
       : "text-blue-600 hover:text-blue-800",
@@ -67,9 +63,9 @@ export const Register = ({ darkMode = false }) => {
   return (
     <div className={formStyles.container}>
       <div className={formStyles.card}>
-        <Typography.Title level={2} className={formStyles.title}>
+        <h2 className={formStyles.title}>
           Create an Account
-        </Typography.Title>
+        </h2>
 
         <Form
           name="register"
