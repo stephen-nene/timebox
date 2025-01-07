@@ -14,7 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
       <React.StrictMode>
         <App />
-        {/* <Analytics /> */}
+        <Analytics />
       </React.StrictMode>
     </Provider>
   </BrowserRouter>
