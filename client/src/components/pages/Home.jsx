@@ -13,9 +13,9 @@ export const Home = () => {
         <Heros />
         <Services />
         <Stats />
-        <Testimonials />
+        {/* <Testimonials /> */}
         <Teams />
-        <Pricings />
+        {/* <Pricings /> */}
       </div>
     </>
   );

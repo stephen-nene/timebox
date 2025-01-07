@@ -120,7 +120,7 @@ function generateUniqueId() {
         </div>
 
         {/* Time Frames Section */}
-        {dayTask.priorities.length >= 3 ? (
+        {/* {dayTask.priorities.length >= 3 ? ( */}
           <div className="bg-yellow-100 dark:bg-yellow-800 rounded-lg p-4 md:col-span-2 md:row-span-2">
             <TimeFrames
               dayTask={dayTask}
@@ -131,12 +131,12 @@ function generateUniqueId() {
               db={db}
             />
           </div>
-        ) : (
+        {/* ) : (
           <div className="text-red-500 text-sm lg:col-span-2 mt-4">
             {dayTask.brainDump.length >= 3 &&
               "Add at least 3 Priorities to proceed to Time Frames."}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

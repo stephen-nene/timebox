@@ -3,36 +3,39 @@ import React from "react";
 export default function Stats() {
   const stats = [
     {
-      name: "Money Saved by Users",
-      stat: "KSH 5.4M+",
+      name: "Time Saved by Users",
+      stat: "10K+ Hours",
     },
-    { name: "Active Monthly Users", stat: "80K+" },
-    { name: "Daily Transactions Logged", stat: "100K+" },
-    { name: "Reliability", stat: "99.9% Uptime" },
+    { name: "Active Monthly Users", stat: "50K+" },
+    { name: "Tasks Completed Daily", stat: "150K+" },
+    { name: "User Satisfaction", stat: "98%" },
   ];
+
   return (
-    <div className="bg- gray-100 px-4 py-12 font-sans">
-      <div className="max-w-4xl max-sm:max-w-sm mx-auto">
-        <h2 className=" text-4xl max-sm:text-2xl font-extrabold mb-8">
-          Why Choose Our Spending Habit Tracker?
+    <div className=" px-4 py-12 font-sans">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-4xl max-sm:text-2xl font-extrabold mb-8 text-center">
+          Why Choose Our Timebox Planner?
         </h2>
-        <p className=" text-lg mb-8">
-          Trusted by thousands, our tracker offers powerful insights to help you
-          manage your spending effectively. See why users love us:
+        <p className="text-lg mb-8 text-center">
+          Join thousands of users boosting their productivity, achieving their
+          goals, and taking control of their time with our powerful timeboxing
+          tools.
         </p>
         <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-5">
-          {stats.map((stat,index) => {
-            return (
-              <div key={index} className="bg-white dark:bg-gray-500 rounded-xl border dark:border-gray-800 px-7 py-8">
-                <p className="text-gray-400 text-base font-semibold mb-1">
-                  {stat.name}
-                </p>
-                <h3 className="text-blue-600 text-3xl font-extrabold">
-                  {stat.stat}
-                </h3>
-              </div>
-            );
-          })}
+          {stats.map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-gray-500 rounded-xl border dark:border-gray-800 px-7 py-8 text-center"
+            >
+              <p className="text-gray -400 text-base font-semibold mb-1">
+                {stat.name}
+              </p>
+              <h3 className="text-blue-600 text-3xl font-extrabold">
+                {stat.stat}
+              </h3>
+            </div>
+          ))}
         </div>
       </div>
     </div>
