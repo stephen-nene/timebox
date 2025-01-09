@@ -110,7 +110,11 @@ function generateUniqueId() {
           </div>
           {dayTask.brainDump.length >= 3 ? (
             <div className="bg-green-100 dark:bg-green-800 rounded-lg p-4">
-              <Priorities db={db} dayTask={dayTask} setDayTask={setDayTask} />
+              <Priorities
+                db={db}
+                dayTask={dayTask}
+                setDayTask={setDayTask}
+                selectedDate={selectedDate} />
             </div>
           ) : (
             <div className="text-red-500 text-sm mt-2">
@@ -121,16 +125,16 @@ function generateUniqueId() {
 
         {/* Time Frames Section */}
         {/* {dayTask.priorities.length >= 3 ? ( */}
-          <div className="bg-yellow-100 dark:bg-yellow-800 rounded-lg p-4 md:col-span-2 md:row-span-2">
-            <TimeFrames
-              dayTask={dayTask}
-              timeFrame={timeFrame}
-              setTimeFrame={setTimeFrame}
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-              db={db}
-            />
-          </div>
+        <div className="bg-yellow-100 dark:bg-yellow-800 rounded-lg p-4 md:col-span-2 md:row-span-2">
+          <TimeFrames
+            dayTask={dayTask}
+            timeFrame={timeFrame}
+            setTimeFrame={setTimeFrame}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            db={db}
+          />
+        </div>
         {/* ) : (
           <div className="text-red-500 text-sm lg:col-span-2 mt-4">
             {dayTask.brainDump.length >= 3 &&

@@ -4,23 +4,22 @@ import { CloseCircleFilled } from "@ant-design/icons";
 import { FiClock, FiFlag, FiCheckCircle } from "react-icons/fi";
 import { addDayTask, getDayTask,formatDate } from "../../../../helpers/indexDb/indexedDB";
 
-export default function Priorities({ db, dayTask, setDayTask }) {
-
+export default function Priorities({ db, dayTask, setDayTask, selectedDate }) {
   const handleAddDayTask = async () => {
     if (db) {
       const res = await addDayTask(db, dayTask);
       message.success("Priority tasks saved");
-      fetchDayTaskAndTimeFrames(); 
+      fetchDayTaskAndTimeFrames();
     }
   };
 
   const fetchDayTaskAndTimeFrames = async () => {
     const task = await getDayTask(db, formatDate(selectedDate));
-    console.log(task);
-    setDayTask(prevState => ({
+    // console.log(task);
+    setDayTask((prevState) => ({
       ...prevState,
       brainDump: task?.brainDump || [],
-      priorities: task?.priorities || []
+      priorities: task?.priorities || [],
     }));
     // const frames = await getTimeFramesByDate(db, selectedDate);
     // setDayTask(task || { date: selectedDate, brainDump: [], priorities: [] });
