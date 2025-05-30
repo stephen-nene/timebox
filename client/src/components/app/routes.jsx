@@ -19,7 +19,7 @@ const AuthRoutes = {
 };
 
 // Eager-loaded components
-import { Home } from "../pages/Home";
+import  Home  from "../pages/Home";
 import { Profiles } from "../pages/Profiles";
 import TomeBox from "../pages/TimeBox.jsx";
 import Pomodoro from "../pages/Pomodoro.jsx";
