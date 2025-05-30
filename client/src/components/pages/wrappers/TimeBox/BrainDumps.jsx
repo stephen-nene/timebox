@@ -11,39 +11,45 @@ import { FiFlag, FiClock, FiCheckCircle } from "react-icons/fi";
 export default function BrainDumps({ dayTask, setDayTask }) {
   const [editingIndex, setEditingIndex] = useState(null);
   const [form] = Form.useForm();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const priorityOptions = [
-    { label: "High", value: "High" },
-    { label: "Medium", value: "Medium" },
-    { label: "Low", value: "Low" },
+    { label: "High", value: "High", icon: <FiFlag className="text-red-500" /> },
+    { label: "Medium", value: "Medium", icon: <FiClock className="text-yellow-500" /> },
+    { label: "Low", value: "Low", icon: <FiCheckCircle className="text-green-500" /> },
   ];
 
-  const handleSubmit = (values) => {
-    const { task, priority } = values;
+  const handleSubmit = async (values) => {
+    setIsSubmitting(true);
+    try {
+      const { task, priority } = values;
 
-    // Update tasks based on whether it's editing or adding a new task
-    if (editingIndex !== null) {
-      const updatedTasks = [...dayTask.brainDump];
-      updatedTasks[editingIndex] = {
-        ...updatedTasks[editingIndex],
-        task,
-        priority,
-      };
-      setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
+      if (editingIndex !== null) {
+        const updatedTasks = [...dayTask.brainDump];
+        updatedTasks[editingIndex] = {
+          ...updatedTasks[editingIndex],
+          task,
+          priority,
+        };
+        setDayTask({ ...dayTask, brainDump: updatedTasks });
+        message.success("Task updated successfully!");
+      } else {
+        const newTask = {
+          id: Date.now(),
+          task,
+          priority: priority || "Medium",
+        };
+        setDayTask({ ...dayTask, brainDump: [...dayTask.brainDump, newTask] });
+        message.success("Task added successfully!");
+      }
+
+      form.resetFields();
       setEditingIndex(null);
-      message.success("Task updated!");
-    } else {
-      const newTask = {
-        id: dayTask.brainDump.length + 1,
-        task,
-        priority: priority || "Medium",
-      };
-      const updatedTasks = [...dayTask.brainDump, newTask];
-      setDayTask({ ...dayTask, brainDump: updatedTasks }); // Update parent state
-      message.success("Task added!");
+    } catch (error) {
+      message.error("Failed to save task. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    form.resetFields();
   };
 
   const removeTask = (index) => {
@@ -88,9 +94,10 @@ export default function BrainDumps({ dayTask, setDayTask }) {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 rounded-xl">
-      <h1 className="text-3xl font-bold mb-6 text-left text-gray-800 dark:text-white">
-        🧠 Brain Dumps
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+        <span>🧠</span>
+        <span>Brain Dumps</span>
       </h1>
 
       {/* Task Form */}
@@ -98,68 +105,81 @@ export default function BrainDumps({ dayTask, setDayTask }) {
         form={form}
         onFinish={handleSubmit}
         initialValues={{ priority: "Medium" }}
-        className="flex flex-col sm:flex-row gap-4 mb-6"
+        className="space-y-4"
       >
-        <Form.Item
-          name="task"
-          rules={[{ required: true, message: "Please enter a task!" }]}
-          className="flex-grow"
-        >
-          <Input
-            placeholder={
-              editingIndex !== null ? "Edit your task" : "What's on your mind?"
-            }
-            size="large"
-            className="w-full"
-          />
-        </Form.Item>
-        <Form.Item name="priority">
-          <Select
-            placeholder="Priority"
-            options={priorityOptions}
-            size="large"
-            className="w-full sm:w-40"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            size="large"
-            icon={editingIndex !== null ? <SaveOutlined /> : <PlusOutlined />}
-            className="bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <Form.Item
+            name="task"
+            rules={[{ required: true, message: "Please enter a task!" }]}
+            className="sm:col-span-3 mb-0"
           >
-            {editingIndex !== null ? "Save" : "Add"}
-          </Button>
-        </Form.Item>
+            <Input
+              placeholder={editingIndex !== null ? "Edit your task..." : "What's on your mind?"}
+              size="large"
+              disabled={isSubmitting}
+              className="transition-all duration-200"
+            />
+          </Form.Item>
+          
+          <Form.Item name="priority" className="mb-0">
+            <Select
+              size="large"
+              disabled={isSubmitting}
+              className="w-full"
+              options={priorityOptions}
+              optionLabelProp="label"
+              optionRender={(option) => (
+                <div className="flex items-center gap-2">
+                  {option.data.icon}
+                  {option.data.label}
+                </div>
+              )}
+            />
+          </Form.Item>
+        </div>
+
+        <Button
+          type="primary"
+          htmlType="submit"
+          size="large"
+          loading={isSubmitting}
+          icon={editingIndex !== null ? <SaveOutlined /> : <PlusOutlined />}
+          className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 transition-colors duration-200"
+        >
+          {editingIndex !== null ? "Save Changes" : "Add Task"}
+        </Button>
       </Form>
 
       {/* Task List */}
-      <div className="rounded-lg shadow-lg bg-white dark:bg-sky-600 dark:text-white p">
+      <div className="mt-6">
         {dayTask.brainDump.length > 0 ? (
           <List
-            bordered
-            className="rounded-lg"
             dataSource={dayTask.brainDump}
+            className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700"
             renderItem={(item, index) => (
               <List.Item
+                className={`transition-all duration-200 ${
+                  editingIndex === index ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                }`}
                 actions={[
-                  <EditOutlined
-                    title="Edit Task"
+                  <Button
                     key="edit"
+                    type="text"
+                    icon={<EditOutlined />}
                     onClick={() => startEditing(index)}
-                    className="text-blue-900 text-lg"
+                    className="text-blue-500 hover:text-blue-600"
                   />,
-                  <DeleteOutlined
-                    title="Delete Task"
+                  <Button
                     key="delete"
+                    type="text"
+                    icon={<DeleteOutlined />}
                     onClick={() => removeTask(index)}
-                    className="text-red-500 text-lg"
+                    className="text-red-500 hover:text-red-600"
                   />,
                 ]}
               >
                 <Tag
-                  className={`flex border-none dark:text-white items-center gap-2 px-3 py-1 text-sm rounded-xl  ${getPriorityColor(
+                  className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-full border-none transition-all duration-200 ${getPriorityColor(
                     item.priority
                   )}`}
                   icon={getPriorityIcon(item.priority)}
@@ -170,7 +190,9 @@ export default function BrainDumps({ dayTask, setDayTask }) {
             )}
           />
         ) : (
-          <p className="text-center p-3">No tasks yet. Add your first one!</p>
+          <div className="text-center p-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700">
+            <p className="text-gray-500 dark:text-gray-400">Your brain dump is empty. Start adding tasks!</p>
+          </div>
         )}
       </div>
     </div>

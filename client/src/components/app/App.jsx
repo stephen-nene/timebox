@@ -65,7 +65,7 @@ function App() {
   return (
     <div className={`${darkMode ? "dark" : ""} flex flex-col`}>
       <Navbar />
-      <div className="bg-[#fbeeffd2] dark:bg-gray-800 dark:text-white min-h-screen p pt-5 px]">
+      <div className="bg-[#fbeeffd2] dark:bg-gray-800 dark:text-white min-h-screen p pt-16 px]">
         <Routes>{routeConfig.map(renderRoute)}</Routes>
       </div>
       <Footer />

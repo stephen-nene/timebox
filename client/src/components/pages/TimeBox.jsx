@@ -65,27 +65,38 @@ const fetchDayTaskAndTimeFrames = async () => {
     // Fetch day task
     const task = await getDayTask(db, formatDate(selectedDate));
 
-    // Update day task state
-    setDayTask((prevState) => ({
-      ...prevState,
+    // Update day task state with task data or defaults
+    setDayTask({
       id: task?.id || generateUniqueId(),
+      user_id: userData?.data?.id || null,
       brainDump: task?.brainDump || [],
       priorities: task?.priorities || [],
+      date: formatDate(selectedDate),
       sync: task?.sync || false,
       timestamp: task?.timestamp || Date.now(),
-    }));
+    });
 
-    const taskId = task?.id ;
-    if (!taskId) {
-      console.error("Task ID is undefined. Cannot fetch timeframes.");
-      return;
+    // Only fetch timeframes if we have a task ID
+    if (task?.id) {
+      const frames = await getTimeFramesByDate(db, task.id);
+      // Replace timeframes instead of appending to prevent duplicates
+      setTimeFrame(frames || [...INITIAL_EVENTS]);
+    } else {
+      setTimeFrame([...INITIAL_EVENTS]);
     }
-
-    const frames = await getTimeFramesByDate(db, taskId);
-
-    setTimeFrame((prevTimeFrames) => [...prevTimeFrames, ...frames]);
   } catch (error) {
     console.error("Error in fetchDayTaskAndTimeFrames:", error);
+    // Reset to defaults on error
+    setTimeFrame([...INITIAL_EVENTS]);
+    setDayTask({
+      id: generateUniqueId(),
+      user_id: userData?.data?.id || null,
+      brainDump: [],
+      priorities: [],
+      date: formatDate(selectedDate),
+      sync: false,
+      timestamp: Date.now(),
+    });
   }
 };
 
@@ -93,39 +104,45 @@ function generateUniqueId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
 }
   return (
-    <div className="min-h-screen p-4">
+    <div className="min-h-screen px-[85px] py-4 bg-g ray-50 dark:bg-gr ay-900 transition-colors duration-200">
       {/* Date Selector at the top */}
-      <div className="mb-4">
+      <div className="max-w -7xl mx-auto mb-6">
         <DateSelector
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
         />
       </div>
 
-      <div className="lg:min-h-screen grid md:grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Brain Dumps Section */}
-        <div className="flex flex-col space-y-4">
-          <div className="bg-blue-100 dark:bg-blue-800 rounded-lg p-4 shadow-lg">
+      <div className="max-w- mx-auto lg:min-h-[calc(100vh-12rem)] grid md:grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column: Brain Dumps and Priorities */}
+        <div className="flex flex-col space-y-6">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg transition-all duration-200 hover:shadow-xl">
             <BrainDumps dayTask={dayTask} setDayTask={setDayTask} />
           </div>
+          
           {dayTask.brainDump.length >= 3 ? (
-            <div className="bg-green-100 dark:bg-green-800 rounded-lg p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg transition-all duration-200 hover:shadow-xl">
               <Priorities
                 db={db}
                 dayTask={dayTask}
                 setDayTask={setDayTask}
-                selectedDate={selectedDate} />
+                selectedDate={selectedDate}
+              />
             </div>
           ) : (
-            <div className="text-red-500 text-sm mt-2">
-              Add at least 3 items to your Brain Dump to proceed to Priorities.
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg text-center">
+              <div className="text-gray-600 dark:text-gray-300 flex items-center justify-center space-x-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Add at least 3 items to your Brain Dump to set Priorities</span>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Time Frames Section */}
-        {/* {dayTask.priorities.length >= 3 ? ( */}
-        <div className="bg-yellow-100 dark:bg-yellow-800 rounded-lg p-4 md:col-span-2 md:row-span-2">
+        {/* Right Column: Time Frames */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg transition-all duration-200 hover:shadow-xl">
           <TimeFrames
             dayTask={dayTask}
             timeFrame={timeFrame}
@@ -135,12 +152,6 @@ function generateUniqueId() {
             db={db}
           />
         </div>
-        {/* ) : (
-          <div className="text-red-500 text-sm lg:col-span-2 mt-4">
-            {dayTask.brainDump.length >= 3 &&
-              "Add at least 3 Priorities to proceed to Time Frames."}
-          </div>
-        )} */}
       </div>
     </div>
   );
